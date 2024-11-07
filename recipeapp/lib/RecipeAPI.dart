@@ -8,8 +8,10 @@ import 'apikey.dart';
 const String _recipeCacheDir = "cache/recipes/";
 
 class RecipeAPI{
-    static Map? searchRecipes(String query){
-        return null;
+    static Future<List<Map<String,dynamic>>> searchRecipesByIngredient(List<String> ingredients) async{
+        var flattenedIngredients = ingredients.join(",");
+        http.Response resp = await http.get(Uri.parse("https://api.spoonacular.com/recipes/findByIngredients?apiKey=$API_KEY&ingredients=$flattenedIngredients"));
+        return jsonDecode(resp.body);
     }
     static Future<Map<String,dynamic>> getRecipe(int id) async{
         io.File myFile = io.File("$_recipeCacheDir$id.json");
