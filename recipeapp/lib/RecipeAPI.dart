@@ -35,10 +35,7 @@ class RecipeAPI{
         if(!myFile.existsSync()){
             // if not, create new file and write data
             myFile.createSync();
-            myFile.writeAsStringSync(resp.body);
-        } else{
-            // if so, overwrite existing data
-            myFile.writeAsStringSync(resp.body);
         }
+        myFile.writeAsStringSync(resp.body);
     }
 }
