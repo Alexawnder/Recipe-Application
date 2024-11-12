@@ -5,18 +5,25 @@ import 'package:http/http.dart' as http;
 
 import 'apikey.dart';
 
+import 'types/recipe.dart';
+import 'types/ingredient.dart';
+
 const String _recipeCacheDir = "cache/recipes/";
 
 class RecipeAPI{
-    static Future<List<Map<String,dynamic>>> searchRecipesByIngredient(List<String> ingredients) async{
+    static Future<List<Recipe>> searchRecipesByIngredient(List<String> ingredients) async{
         // turn ingredients List into comma-separated string
         var flattenedIngredients = ingredients.join(",");
         // query the API
         http.Response resp = await http.get(Uri.parse("https://api.spoonacular.com/recipes/findByIngredients?apiKey=$API_KEY&ingredients=$flattenedIngredients"));
         // return a List of Maps (json)
-        return jsonDecode(resp.body);
+        List<Map<String,dynamic>> recipesJson = jsonDecode(resp.body);
+
+        List<Recipe> out = [];
+        recipesJson.forEach((recipe) => out.add(Recipe(recipe)));
+        return out;
     }
-    static Future<Map<String,dynamic>> getRecipe(int id) async{
+    static Future<Recipe> getRecipe(int id) async{
         io.File myFile = io.File("$_recipeCacheDir$id.json");
         // check if the recipe exists in the cache already
         if(!myFile.existsSync()){
@@ -24,7 +31,7 @@ class RecipeAPI{
             await downloadRecipe(id);
         }
         // return cached recipe
-        return jsonDecode(myFile.readAsStringSync());
+        return Recipe(jsonDecode(myFile.readAsStringSync()));
     }
     static Future<void> downloadRecipe(int id) async{
          // query API for recipe data
