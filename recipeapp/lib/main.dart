@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'pages/home.dart';  
 
 const appId = '630a63de';
 const appKey = '2ebdde9075b8b570315e2734bd35f0ce';
@@ -20,88 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Recipe Finder'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  List<Map<String, dynamic>> recipes = [];
-
-  Future<void> fetchRecipes(String query) async {
-    final url = Uri.parse(
-        'https://api.edamam.com/search?q=$query&app_id=$appId&app_key=$appKey');
-
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      print(json.encode(data)); // For debugging
-
-      setState(() {
-        recipes = (data['hits'] as List)
-            .map((hit) => hit['recipe'] as Map<String, dynamic>)
-            .toList();
-      });
-    } else {
-      print('Failed to fetch recipes: ${response.statusCode}');
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              onSubmitted: fetchRecipes,
-              decoration: const InputDecoration(
-                labelText: 'Enter a recipe name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: recipes.length,
-              itemBuilder: (context, index) {
-                final recipe = recipes[index];
-                return Card(
-                  child: ListTile(
-                    title: Text(recipe['label']),
-                    subtitle: Text('Calories: ${recipe['calories'].toStringAsFixed(2)}'),
-                    leading: recipe['image'] != null
-                        ? Image.network(recipe['image'], width: 50, height: 50, fit: BoxFit.cover)
-                        : const Icon(Icons.fastfood),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RecipeDetailScreen(recipe: recipe),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+      home: const MyHomePage(title: 'Recipe Finder'),  
     );
   }
 }
@@ -159,7 +79,7 @@ class RecipeDetailScreen extends StatelessWidget {
     );
   }
 
-  void launchURL(String url) {
-    // Logic to open URL, you can use url_launcher package
+  void launchURL(String url) async {
+  
   }
 }
