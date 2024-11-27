@@ -37,6 +37,28 @@ class RecipeAPI{
 
         return out;
     }
+    static Future<List<Recipe>> searchRecipesByIngredientString(List<String> ingredients) async{
+        // turn ingredients List into comma-separated string
+        var flattenedIngredients = ingredients.join(",");
+        // query the API
+        http.Response resp = await http.get(Uri.parse("https://api.spoonacular.com/recipes/findByIngredients?apiKey=$API_KEY&ingredients=$flattenedIngredients"));
+
+        // create output variable
+        List<Recipe> out = [];
+        if(resp.statusCode != 200){
+            return out;
+        }
+        // return a List of Maps (json)
+        List<dynamic> recipesJson = jsonDecode(resp.body);
+        for(int i = 0; i < recipesJson.length; i++){
+            var recipe = recipesJson[i];
+            if(recipe is Map<String, dynamic>){
+                out.add(Recipe(recipe));
+            }
+        }
+
+        return out;
+    }
     static Future<Recipe> getRecipe(int id) async{
         io.File myFile = io.File("$_recipeCacheDir$id.json");
         // check if the recipe exists in the cache already
