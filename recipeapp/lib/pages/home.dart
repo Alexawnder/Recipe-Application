@@ -1,7 +1,7 @@
-// lib/pages/home.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'RecipeSearchList.dart'; 
+import '../components/NavBar.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
