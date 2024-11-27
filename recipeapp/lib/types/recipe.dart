@@ -28,7 +28,7 @@ class Recipe
         imageType,
         summary,
         instructions;
-    List<Ingredient> ingredients = [];
+    late List<Ingredient> ingredients = [];
     late List<dynamic> cuisines,
         dishTypes,
         diets,
@@ -65,13 +65,15 @@ class Recipe
         summary = jsonData["summary"];
         instructions = jsonData["instructions"];
         // ingredients
-        jsonData["extendedIngredients"].forEach((ingredient) => ingredients.add(Ingredient(ingredient)));
+        jsonData["extendedIngredients"]?.forEach((ingredient) => ingredients.add(Ingredient(ingredient)));
         // lists
-        cuisines = jsonData["cuisines"];
-        dishTypes = jsonData["dishTypes"];
-        diets = jsonData["diets"];
-        occasions = jsonData["occasions"];
-        analyzedInstructions = jsonData["analyzedInstructions"]; 
+        // note: syntax roughly equals
+        // variable = jsonData["variable"] != null ? jsonData["variable"] : [];
+        cuisines = jsonData["cuisines"]?? [];
+        dishTypes = jsonData["dishTypes"]?? [];
+        diets = jsonData["diets"]?? [];
+        occasions = jsonData["occasions"]?? [];
+        analyzedInstructions = jsonData["analyzedInstructions"]?? []; 
     }
 
     @override
