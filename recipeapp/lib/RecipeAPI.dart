@@ -21,11 +21,12 @@ class RecipeAPI{
         // query the API
         http.Response resp = await http.get(Uri.parse("https://api.spoonacular.com/recipes/findByIngredients?apiKey=$API_KEY&ingredients=$flattenedIngredients"));
 
+        // return nothing if bad resp code
+        if(resp.statusCode != 200){
+            return [];
+        }
         // create output variable
         List<Recipe> out = [];
-        if(resp.statusCode != 200){
-            return out;
-        }
         // return a List of Maps (json)
         List<dynamic> recipesJson = jsonDecode(resp.body);
         for(int i = 0; i < recipesJson.length; i++){
@@ -59,20 +60,28 @@ class RecipeAPI{
 
         return out;
     }
-    static Future<Recipe> getRecipe(int id) async{
+    static Future<Recipe?> getRecipe(int id) async{
         io.File myFile = io.File("$_recipeCacheDir$id.json");
         // check if the recipe exists in the cache already
         if(!myFile.existsSync()){
             // if not, download it
-            await downloadRecipe(id);
+            bool succeeded = await downloadRecipe(id);
+            if(!succeeded){
+                return null;
+            }
         }
         // return cached recipe
         return Recipe(jsonDecode(myFile.readAsStringSync()));
     }
-    static Future<void> downloadRecipe(int id) async{
+    static Future<bool> downloadRecipe(int id) async{
          // query API for recipe data
         http.Response resp = await http.get(Uri.parse("https://api.spoonacular.com/recipes/$id/information?apiKey=$API_KEY"));
         print("api call");
+
+        if(resp.statusCode != 200){
+            return false;
+        }
+
         io.File myFile = io.File("$_recipeCacheDir$id.json");
         // check if the recipe alreday in cache
         if(!myFile.existsSync()){
@@ -80,5 +89,6 @@ class RecipeAPI{
             myFile.createSync();
         }
         myFile.writeAsStringSync(resp.body);
+        return true;
     }
 }
