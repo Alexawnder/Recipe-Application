@@ -11,16 +11,30 @@ import 'types/ingredient.dart';
 const String _recipeCacheDir = "cache/recipes/";
 
 class RecipeAPI{
-    static Future<List<Recipe>> searchRecipesByIngredient(List<String> ingredients) async{
+    static Future<List<Recipe>> searchRecipesByIngredient(List<Ingredient> ingredients) async{
         // turn ingredients List into comma-separated string
-        var flattenedIngredients = ingredients.join(",");
+        var flattenedIngredients = "";
+        ingredients.forEach((i) => (flattenedIngredients += "${i.name},"));
+        if(flattenedIngredients.lastIndexOf(",") == flattenedIngredients.length-1){
+            flattenedIngredients = flattenedIngredients.substring(0, flattenedIngredients.length-1);
+        }
         // query the API
         http.Response resp = await http.get(Uri.parse("https://api.spoonacular.com/recipes/findByIngredients?apiKey=$API_KEY&ingredients=$flattenedIngredients"));
-        // return a List of Maps (json)
-        List<Map<String,dynamic>> recipesJson = jsonDecode(resp.body);
 
+        // create output variable
         List<Recipe> out = [];
-        recipesJson.forEach((recipe) => out.add(Recipe(recipe)));
+        if(resp.statusCode != 200){
+            return out;
+        }
+        // return a List of Maps (json)
+        List<dynamic> recipesJson = jsonDecode(resp.body);
+        for(int i = 0; i < recipesJson.length; i++){
+            var recipe = recipesJson[i];
+            if(recipe is Map<String, dynamic>){
+                out.add(Recipe(recipe));
+            }
+        }
+
         return out;
     }
     static Future<Recipe> getRecipe(int id) async{
