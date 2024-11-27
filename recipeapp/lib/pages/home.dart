@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'RecipeSearchList.dart'; 
+import 'Fridge.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -41,7 +42,18 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: logoSize,
                   height: logoSize,
                 ),
-
+                    
+                TextButton(
+                    child: Text( "wahoo"),
+                    onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Fridge(),
+                            ),
+                        );
+                    },
+                ),
                 Padding(
                   padding: EdgeInsets.only(
                       top: (orientation == Orientation.portrait)
