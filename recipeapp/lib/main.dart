@@ -4,10 +4,12 @@ import 'package:http/http.dart' as http;
 import 'package:recipeapp/pages/RecipeSearchList.dart';
 import 'pages/home.dart'; 
 import 'pages/RecipeDetails.dart'; 
+import 'pages/SavedRecipes.dart';
 import 'components/NavBar.dart'; 
 
 const appId = '630a63de';
 const appKey = '2ebdde9075b8b570315e2734bd35f0ce';
+
 
 void main() {
   runApp(const MyApp());
@@ -18,6 +20,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
       title: 'Recipe Finder',
       theme: ThemeData(
@@ -30,7 +33,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  
+  const MainScreen({super.key });
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -38,31 +42,47 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  final List<Map<String, dynamic>> _savedRecipes = []; //this recipe lsit will get passed around between pages
 
-  // Define the pages for each navigation item
-  final List<Widget> _pages = [
-    const MyHomePage(title: 'Recipe Finder'), // Home page
-    const RecipeSearchList(query: ''), // Placeholder for Search
-    Center(child: Text('Saved Recipes Page in Progress', style: TextStyle(fontSize: 24))), // Placeholder for Saved Recipes Page
-  ];
-
-  // Handle navigation item taps
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      _selectedIndex = index; 
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex], // Display the current page
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          MyHomePage(
+            title: 'Recipe Finder',
+            savedRecipes: _savedRecipes,
+            onItemTapped: _onItemTapped,
+          ),
+          RecipeSearchList(
+            query: '',
+            savedRecipes: _savedRecipes,
+            onSave: (recipe) {
+              setState(() {
+                if (_savedRecipes.any((saved) => saved['label'] == recipe['label'])) {
+                  _savedRecipes.removeWhere((saved) => saved['label'] == recipe['label']);
+                } else {
+                  _savedRecipes.add(recipe);
+                }
+              });
+            },
+          ),
+          SavedRecipes(
+            savedRecipes: _savedRecipes,
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomNavBar(
         selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
+        onItemTapped: _onItemTapped, // passes the callback to the BottomNavBar
       ),
     );
   }
 }
-
-
