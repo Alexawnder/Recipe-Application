@@ -11,6 +11,29 @@ import 'types/ingredient.dart';
 const String _recipeCacheDir = "cache/recipes/";
 
 class RecipeAPI{
+
+    static Future<List<Recipe>> searchRecipesByName(String query) async{
+        http.Response resp = await http.get(Uri.parse("https://api.spoonacular.com/recipes/complexSearch?apiKey=$API_KEY&query=$query"));
+        print("api call!");
+        
+        if(resp.statusCode != 200){
+            return [];
+        }
+        // create output variable
+        List<Recipe> out = [];
+        // return a List of Maps (json)
+        List<dynamic> recipesJson = jsonDecode(resp.body)["results"];
+        for(int i = 0; i < recipesJson.length; i++){
+            var recipe = recipesJson[i];
+            if(recipe is Map<String, dynamic>){
+                out.add(Recipe(recipe));
+            }
+        }
+
+        return out;
+    }
+
+
     static Future<List<Recipe>> searchRecipesByIngredient(List<Ingredient> ingredients) async{
         // turn ingredients List into comma-separated string
         var flattenedIngredients = "";
@@ -20,6 +43,7 @@ class RecipeAPI{
         }
         // query the API
         http.Response resp = await http.get(Uri.parse("https://api.spoonacular.com/recipes/findByIngredients?apiKey=$API_KEY&ingredients=$flattenedIngredients"));
+        print("api call!");
 
         // return nothing if bad resp code
         if(resp.statusCode != 200){
@@ -43,6 +67,7 @@ class RecipeAPI{
         var flattenedIngredients = ingredients.join(",");
         // query the API
         http.Response resp = await http.get(Uri.parse("https://api.spoonacular.com/recipes/findByIngredients?apiKey=$API_KEY&ingredients=$flattenedIngredients"));
+        print("api call!");
 
         // create output variable
         List<Recipe> out = [];
@@ -76,7 +101,7 @@ class RecipeAPI{
     static Future<bool> downloadRecipe(int id) async{
          // query API for recipe data
         http.Response resp = await http.get(Uri.parse("https://api.spoonacular.com/recipes/$id/information?apiKey=$API_KEY"));
-        print("api call");
+        print("api call!");
 
         if(resp.statusCode != 200){
             return false;
