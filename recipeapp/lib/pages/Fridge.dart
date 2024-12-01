@@ -25,12 +25,18 @@ class Fridge extends StatelessWidget {
                                     leading: Image.network(fridgeItem.image,
                                         width:50, height: 50, fit: BoxFit.cover),
                                     title: Text(
-                                        fridgeItem.name,
+                                        "${contents[fridgeItem]}x ${fridgeItem.nameClean}",
                                         style: GoogleFonts.dancingScript(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.bold,
                                             color: const Color(0xFF7EA16B),
                                         ),
+                                    ),
+                                    trailing: IconButton(
+                                        icon: const Icon(Icons.remove),
+                                        onPressed: () {
+                                            fridgeContentsProvider.removeIngredient(fridgeItem);
+                                        }
                                     ),
                                 ),
                             );
