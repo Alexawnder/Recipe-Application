@@ -27,4 +27,12 @@ class Ingredient
     String toString(){
         return "Ingredient name = $name, id = $id";
     }
+    @override
+    bool operator ==(Object other) =>
+        other is Ingredient &&
+        other.runtimeType == this.runtimeType &&
+        other.id == this.id;
+
+    @override
+    int get hashCode => id.hashCode;
 }
