@@ -73,6 +73,13 @@ class RecipeAPI{
         // return cached recipe
         return Recipe(jsonDecode(myFile.readAsStringSync()));
     }
+    static Recipe? getCachedRecipe(int id){
+        io.File myFile = io.File("$_recipeCacheDir$id.json");
+        if(!myFile.existsSync()){
+            return null;
+        }
+        return Recipe(jsonDecode(myFile.readAsStringSync()));
+    }
     static Future<bool> downloadRecipe(int id) async{
          // query API for recipe data
         http.Response resp = await http.get(Uri.parse("https://api.spoonacular.com/recipes/$id/information?apiKey=$API_KEY"));
