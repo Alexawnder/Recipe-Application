@@ -16,7 +16,7 @@ class Fridge extends StatelessWidget {
                 builder: (context, fridgeContentsProvider, child) {
                     Map<Ingredient, int> contents = fridgeContentsProvider.fridgeContents;
                     return ListView.builder(
-                        itemCount: contents.length,
+                        itemCount: contents.keys.length,
                         itemBuilder: (context, index) {
                             Ingredient fridgeItem = contents.keys.elementAt(index);
                             return Card(
