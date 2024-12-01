@@ -24,10 +24,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Recipe Finder',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF7EA16B)),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MainScreen(), // MainScreen manages the navigation
+      home: const MainScreen(),
     );
   }
 }

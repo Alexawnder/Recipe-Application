@@ -96,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             );
                           }
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Enter a recipe name',
                           labelStyle: const TextStyle(
                             color: Color.fromRGBO(128, 116, 113, 1),
