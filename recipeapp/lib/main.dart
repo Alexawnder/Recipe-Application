@@ -2,13 +2,22 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'pages/home.dart';  
-import 'pages/RecipeDetails.dart';  
+import 'pages/RecipeDetails.dart';
+import 'package:provider/provider.dart';
+import 'providers/FridgeContentsProvider.dart';
 
 const appId = '630a63de';
 const appKey = '2ebdde9075b8b570315e2734bd35f0ce';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => FridgeContentsProvider()),
+      ],
+      child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
