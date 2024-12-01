@@ -13,7 +13,7 @@ class Ingredient
     Ingredient(Map<String,dynamic> jsonData){
         id = jsonData["id"];
         aisle = jsonData["aisle"];
-        image = jsonData["image"];
+        image = "https://img.spoonacular.com/ingredients_250x250/${jsonData["image"]}";
         consistency = jsonData["consistency"];
         name = jsonData["name"];
         nameClean = jsonData["nameClean"];
