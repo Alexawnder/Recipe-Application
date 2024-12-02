@@ -14,7 +14,7 @@ class Fridge extends StatelessWidget {
         style: GoogleFonts.playfairDisplay(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: const Color(0xFF000000), // Ensure the font color matches the theme
+          color: const Color(0xFF000000), 
         ),
       ),
         backgroundColor: const Color(0xFF7EA16B),
@@ -54,10 +54,10 @@ class Fridge extends StatelessWidget {
                         : const Icon(Icons.image_not_supported, size: 50),
                     title: Text(
                       "${quantity}x ${fridgeItem.name}",
-                      style: GoogleFonts.dancingScript(
+                      style: const TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF7EA16B),
+                        color: Color(0xFF000000),
                       ),
                     ),
                     subtitle: Text(

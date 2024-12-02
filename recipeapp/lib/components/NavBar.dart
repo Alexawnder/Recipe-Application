@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int selectedIndex;
-  final Function(int) onItemTapped; //  to switch tabs
+  final Function(int) onItemTapped;
 
   const BottomNavBar({
     Key? key,
@@ -14,12 +14,13 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: selectedIndex,
-      onTap: onItemTapped, // Use the callback for tab switching
-      selectedItemColor: Colors.black, // Highlighted item color
-      unselectedItemColor: Colors.black87, // Dimmed item color
+      onTap: onItemTapped,
+      selectedItemColor: Colors.black,
+      unselectedItemColor: Colors.black87,
       backgroundColor: const Color(0xFF7EA16B),
       selectedLabelStyle: const TextStyle(fontSize: 15.0),
-      unselectedLabelStyle: const TextStyle(fontSize: 15.0),
+      unselectedLabelStyle: const TextStyle(fontSize: 0.0), // Hide unselected labels
+      type: BottomNavigationBarType.fixed, // Ensure consistent behavior
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Image.asset(
@@ -27,7 +28,7 @@ class BottomNavBar extends StatelessWidget {
             width: 25.0,
             height: 25.0,
           ),
-          label: 'Home',
+          label: selectedIndex == 0 ? 'Home' : '',
         ),
         BottomNavigationBarItem(
           icon: Image.asset(
@@ -35,7 +36,7 @@ class BottomNavBar extends StatelessWidget {
             width: 25.0,
             height: 25.0,
           ),
-          label: 'Search',
+          label: selectedIndex == 1 ? 'Search' : '',
         ),
         BottomNavigationBarItem(
           icon: Image.asset(
@@ -43,7 +44,7 @@ class BottomNavBar extends StatelessWidget {
             width: 25.0,
             height: 25.0,
           ),
-          label: 'Fridge',
+          label: selectedIndex == 2 ? 'Fridge' : '',
         ),
         BottomNavigationBarItem(
           icon: Image.asset(
@@ -51,7 +52,7 @@ class BottomNavBar extends StatelessWidget {
             width: 25.0,
             height: 25.0,
           ),
-          label: 'List',
+          label: selectedIndex == 3 ? 'List' : '',
         ),
         BottomNavigationBarItem(
           icon: Image.asset(
@@ -59,7 +60,7 @@ class BottomNavBar extends StatelessWidget {
             width: 25.0,
             height: 25.0,
           ),
-          label: 'Saved',
+          label: selectedIndex == 4 ? 'Saved' : '',
         ),
       ],
     );
