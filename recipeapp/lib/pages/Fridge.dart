@@ -25,7 +25,7 @@ class Fridge extends StatelessWidget {
                                     leading: Image.network(fridgeItem.image,
                                         width:50, height: 50, fit: BoxFit.cover),
                                     title: Text(
-                                        "${contents[fridgeItem]}x ${fridgeItem.nameClean}",
+                                        "${contents[fridgeItem]}x ${fridgeItem.name}",
                                         style: GoogleFonts.dancingScript(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.bold,

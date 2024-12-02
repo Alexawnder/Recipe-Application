@@ -10,9 +10,6 @@ import 'types/ingredient.dart';
 
 
 class RecipeAPI{
-
-
-
     static Future<List<Recipe>> searchRecipesByName(String query) async{
         final searchRecipeURL = Uri.parse("https://api.edamam.com/search?q=$query&app_id=$APP_ID&app_key=$APP_KEY");
         http.Response resp = await http.get(searchRecipeURL);

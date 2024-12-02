@@ -1,21 +1,21 @@
 class Ingredient
 {
-    late String? text,
+    late String text,
         measure,
         name,
         foodCategory,
         id,
         image;
-    late double? quantity, weight;
+    late double quantity, weight;
     Ingredient(Map<String,dynamic> jsonData){
-        text = jsonData["text"];
-        measure = jsonData["measure"];
-        name = jsonData["food"];
-        foodCategory = jsonData["foodCategory"];
-        id = jsonData["foodId"];
-        image = jsonData["image"];
-        quantity = jsonData["quantity"];
-        weight = jsonData["weight"];
+        text = jsonData["text"] ?? "";
+        measure = jsonData["measure"] ?? "";
+        name = jsonData["food"] ?? "";
+        foodCategory = jsonData["foodCategory"] ?? "";
+        id = jsonData["foodId"] ?? "";
+        image = jsonData["image"] ?? "";
+        quantity = jsonData["quantity"] ?? 0.0;
+        weight = jsonData["weight"] ?? 0.0;
     }
 
     @override
