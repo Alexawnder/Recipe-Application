@@ -1,38 +1,33 @@
-class Ingredient
-{
-    late int id;
-    late String aisle,
-        image,
-        consistency,
-        name,
-        nameClean,
-        original,
-        originalName;
-    late List<dynamic> meta;
-    late Map<String,dynamic> measures;
-    Ingredient(Map<String,dynamic> jsonData){
-        id = jsonData["id"];
-        aisle = jsonData["aisle"];
-        image = "https://img.spoonacular.com/ingredients_250x250/${jsonData["image"]}";
-        consistency = jsonData["consistency"];
-        name = jsonData["name"];
-        nameClean = jsonData["nameClean"];
-        original = jsonData["original"];
-        originalName = jsonData["originalName"];
-        meta = jsonData["meta"];
-        measures = jsonData["measures"];
-    }
+class Ingredient {
+  late int id;
+  late String name;
+  late String original;
+  late String aisle;
+  late String image;
+  late Map<String, dynamic> measures;
 
-    @override
-    String toString(){
-        return "Ingredient name = $name, id = $id";
-    }
-    @override
-    bool operator ==(Object other) =>
-        other is Ingredient &&
-        other.runtimeType == this.runtimeType &&
-        other.id == this.id;
+  Ingredient(Map<String, dynamic> jsonData) {
+    id = jsonData["id"] ?? jsonData["original"].hashCode; // Default to hash if ID is missing
+    name = jsonData["name"] ?? jsonData["original"];
+    original = jsonData["original"] ?? "";
+    aisle = jsonData["aisle"] ?? "Unknown";
+    image = jsonData["image"] != null
+        ? "https://img.spoonacular.com/ingredients_250x250/${jsonData["image"]}"
+        : ""; // Handle missing image
+    measures = jsonData["measures"] ?? {};
+  }
 
-    @override
-    int get hashCode => id.hashCode;
+  @override
+  String toString() {
+    return "Ingredient name = $name, id = $id";
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is Ingredient &&
+      other.runtimeType == this.runtimeType &&
+      other.id == this.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

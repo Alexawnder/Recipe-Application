@@ -31,7 +31,7 @@ class SavedRecipes extends StatelessWidget {
           ? const Center(
               child: Text(
                 'No saved recipes yet.',
-                style: TextStyle(fontSize: 18.0),
+                style: TextStyle(fontSize: 18, color: Colors.grey),
               ),
             )
           : ListView.builder(
