@@ -13,8 +13,18 @@ class RecipeAPI{
 
 
 
-    static Future<List<Recipe>> searchRecipesByName(String query){
-        String searchRecipeURL = "'https://api.edamam.com/search?q=$query&app_id=$APP_ID&app_key=$APP_KEY'
+    static Future<List<Recipe>> searchRecipesByName(String query) async{
+        String searchRecipeURL = "https://api.edamam.com/search?q=$query&app_id=$APP_ID&app_key=$APP_KEY";
+        http.Response resp = await http.get(Uri.parse(searchRecipeURL));
+        if(resp.statusCode != 200){
+            return [];
+        }
+        List<Recipe> out = [];
+        List<dynamic> recipesJson = jsonDecode(resp.body);
+        print(recipesJson);
+        for(int i = 0; i < recipesJson.length; i++){
+        }
+        return out;
     }
     /*
     static Future<String> get _recipeCacheDir async {
