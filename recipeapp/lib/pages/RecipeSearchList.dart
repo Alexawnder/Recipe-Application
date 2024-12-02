@@ -6,8 +6,15 @@ import 'RecipeDetails.dart';
 
 class RecipeSearchList extends StatefulWidget {
   final String query;
+  final List<Map<String, dynamic>> savedRecipes;
+  final Function(Map<String, dynamic>) onSave;
 
-  const RecipeSearchList({super.key, required this.query});
+  const RecipeSearchList({
+    super.key,
+    required this.query,
+    required this.savedRecipes,
+    required this.onSave,
+  });
 
   @override
   _RecipeSearchListState createState() => _RecipeSearchListState();
@@ -16,12 +23,13 @@ class RecipeSearchList extends StatefulWidget {
 class _RecipeSearchListState extends State<RecipeSearchList> {
   late Future<List<Map<String, dynamic>>> _recipesFuture;
   TextEditingController _controller = TextEditingController();
+  
 
   @override
   void initState() {
     super.initState();
     _controller.text = widget.query;
-    _recipesFuture = fetchRecipes(widget.query);  // Initial fetch with provided query
+    _recipesFuture = fetchRecipes(widget.query);  
   }
 
   Future<List<Map<String, dynamic>>> fetchRecipes(String searchQuery) async {
@@ -45,7 +53,7 @@ class _RecipeSearchListState extends State<RecipeSearchList> {
   // Handle search submission
   void _handleSearch(String query) {
     setState(() {
-      _recipesFuture = fetchRecipes(query);  // Fetch recipes when enter is pressed
+      _recipesFuture = fetchRecipes(query);  
     });
   }
 
@@ -89,6 +97,8 @@ class _RecipeSearchListState extends State<RecipeSearchList> {
                   var recipe = recipes[index];
                   var label = recipe['label'];
                   var imageUrl = recipe['image'];
+                  final isSaved = widget.savedRecipes
+                  .any((savedRecipe) => savedRecipe['label'] == label);
                   return Card(
                     margin: const EdgeInsets.all(8.0),
                     child: ListTile(
@@ -102,6 +112,22 @@ class _RecipeSearchListState extends State<RecipeSearchList> {
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFF000000),
                         ),
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(
+                          isSaved ? Icons.favorite : Icons.favorite_border,
+                          color: isSaved ? Colors.red : Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            if (isSaved) {
+                              widget.savedRecipes.removeWhere(
+                                  (saved) => saved['label'] == label);
+                            } else {
+                              widget.savedRecipes.add(recipe);
+                            }
+                          });
+                        },
                       ),
                       onTap: () {
                         Navigator.push(
