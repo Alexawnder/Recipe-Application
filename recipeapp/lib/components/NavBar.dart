@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import '../pages/RecipeSearchList.dart';
-
-import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -27,24 +24,40 @@ class BottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Image.asset(
             'assets/images/HomeIcon.png',
-            width: 35.0,
-            height: 35.0,
+            width: 25.0,
+            height: 25.0,
           ),
           label: 'Home',
         ),
         BottomNavigationBarItem(
           icon: Image.asset(
             'assets/images/search.png',
-            width: 35.0,
-            height: 35.0,
+            width: 25.0,
+            height: 25.0,
           ),
           label: 'Search',
         ),
         BottomNavigationBarItem(
           icon: Image.asset(
+            'assets/images/fridge.png',
+            width: 25.0,
+            height: 25.0,
+          ),
+          label: 'Fridge',
+        ),
+        BottomNavigationBarItem(
+          icon: Image.asset(
+            'assets/images/list.png',
+            width: 25.0,
+            height: 25.0,
+          ),
+          label: 'List',
+        ),
+        BottomNavigationBarItem(
+          icon: Image.asset(
             'assets/images/SavedRecipes.png',
-            width: 35.0,
-            height: 35.0,
+            width: 25.0,
+            height: 25.0,
           ),
           label: 'Saved',
         ),

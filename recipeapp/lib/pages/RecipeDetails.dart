@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'GroceryList.dart';
+import '../providers/GroceryListProvider.dart'; 
+import 'package:provider/provider.dart';
+
 
 
 class RecipeDetails extends StatelessWidget {
@@ -9,9 +13,12 @@ class RecipeDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Explicitly cast the recipe map to Map<String, dynamic>
+    final cleanedRecipe = recipe.cast<String, dynamic>();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(recipe['label'], style: const TextStyle(fontSize: 18)),
+        title: Text(cleanedRecipe['label'] ?? 'Recipe', style: const TextStyle(fontSize: 18)),
         backgroundColor: const Color(0xFF7EA16B),
       ),
       body: SingleChildScrollView(
@@ -21,7 +28,7 @@ class RecipeDetails extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                recipe['label'],
+                cleanedRecipe['label'] ?? 'Recipe',
                 style: Theme.of(context)
                     .textTheme
                     .headlineLarge
@@ -30,13 +37,13 @@ class RecipeDetails extends StatelessWidget {
               ),
             ),
             // Recipe Image
-            if (recipe['image'] != null)
+            if (cleanedRecipe['image'] != null)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
-                    recipe['image'],
+                    cleanedRecipe['image'],
                     height: 200,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -64,20 +71,59 @@ class RecipeDetails extends StatelessWidget {
                     child: TabBarView(
                       children: [
                         // Ingredients Tab
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: ListView.builder(
-                            itemCount: (recipe['ingredientLines'] as List).length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                leading: const Icon(Icons.circle, size: 8),
-                                title: Text(
-                                  recipe['ingredientLines'][index],
-                                  style: const TextStyle(fontSize: 16),
+                        Column(
+                          children: [
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: (cleanedRecipe['ingredientLines'] as List<dynamic>?)?.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  final ingredient =
+                                      (cleanedRecipe['ingredientLines'] as List<dynamic>)[index] as String;
+                                  return ListTile(
+                                    leading: const Icon(Icons.circle, size: 8),
+                                    title: Text(
+                                      ingredient,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  final groceryListProvider = Provider.of<GroceryListProvider>(context, listen: false);
+
+                                  // Clear the grocery list
+                                  groceryListProvider.clearList();
+
+                                  // Add new ingredients to the grocery list
+                                  final ingredients = (cleanedRecipe['ingredientLines'] as List<dynamic>?)
+                                          ?.map((line) => line as String)
+                                          .toList() ??
+                                      [];
+
+                                  for (var ingredient in ingredients) {
+                                    groceryListProvider.addIngredient(ingredient);
+                                  }
+
+                                  // Navigate to the Grocery List screen
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => GroceryList(),
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(context).primaryColor,
+                                  foregroundColor: Colors.white,
                                 ),
-                              );
-                            },
-                          ),
+                                child: const Text('Create Grocery List'),
+                              ),
+                            ),
+                          ],
                         ),
                         // Nutrition Tab
                         Padding(
@@ -86,32 +132,31 @@ class RecipeDetails extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Calories: ${recipe['calories'].toStringAsFixed(2)}',
+                                'Calories: ${cleanedRecipe['calories']?.toStringAsFixed(2) ?? 'N/A'}',
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               const SizedBox(height: 8),
-                              if (recipe.containsKey('totalNutrients'))
+                              if (cleanedRecipe.containsKey('totalNutrients'))
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    if (recipe['totalNutrients']['FAT'] != null)
+                                    if (cleanedRecipe['totalNutrients']['FAT'] != null)
                                       Text(
-                                        'Fat: ${recipe['totalNutrients']['FAT']['quantity'].toStringAsFixed(2)} ${recipe['totalNutrients']['FAT']['unit']}',
+                                        'Fat: ${cleanedRecipe['totalNutrients']['FAT']['quantity'].toStringAsFixed(2)} ${cleanedRecipe['totalNutrients']['FAT']['unit']}',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium,
                                       ),
-                                    if (recipe['totalNutrients']['CHOCDF'] != null)
+                                    if (cleanedRecipe['totalNutrients']['CHOCDF'] != null)
                                       Text(
-                                        'Carbs: ${recipe['totalNutrients']['CHOCDF']['quantity'].toStringAsFixed(2)} ${recipe['totalNutrients']['CHOCDF']['unit']}',
+                                        'Carbs: ${cleanedRecipe['totalNutrients']['CHOCDF']['quantity'].toStringAsFixed(2)} ${cleanedRecipe['totalNutrients']['CHOCDF']['unit']}',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium,
                                       ),
-                                    if (recipe['totalNutrients']['PROCNT'] !=
-                                        null)
+                                    if (cleanedRecipe['totalNutrients']['PROCNT'] != null)
                                       Text(
-                                        'Protein: ${recipe['totalNutrients']['PROCNT']['quantity'].toStringAsFixed(2)} ${recipe['totalNutrients']['PROCNT']['unit']}',
+                                        'Protein: ${cleanedRecipe['totalNutrients']['PROCNT']['quantity'].toStringAsFixed(2)} ${cleanedRecipe['totalNutrients']['PROCNT']['unit']}',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium,
@@ -120,14 +165,14 @@ class RecipeDetails extends StatelessWidget {
                                 ),
                               const SizedBox(height: 16),
                               Text(
-                                'Source: ${recipe['source']}',
+                                'Source: ${cleanedRecipe['source'] ?? 'Unknown'}',
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               const SizedBox(height: 16),
                               Center(
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    _launchURL(recipe['url']);
+                                    _launchURL(cleanedRecipe['url'] ?? '');
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Theme.of(context).primaryColor, // Button background color
@@ -155,8 +200,8 @@ class RecipeDetails extends StatelessWidget {
 }
 
 void _launchURL(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
+  if (await canLaunchUrl(Uri.parse(url))) {
+    await launchUrl(Uri.parse(url));
   } else {
     throw 'Could not launch $url';
   }

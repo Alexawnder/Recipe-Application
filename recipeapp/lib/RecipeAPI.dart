@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 
-import 'apikey.dart';
 
 import 'types/recipe.dart';
 import 'types/ingredient.dart';
 
+
+var API_KEY = "12345";
 
 class RecipeAPI{
     static Future<String> get _recipeCacheDir async {

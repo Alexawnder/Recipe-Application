@@ -69,6 +69,8 @@ flutter:
      - assets/images/SavedRecipes.png
      - assets/images/HomeIcon.png
      - assets/images/search.png
+     - assets/images/fridge.png
+     - assets/images/list.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
