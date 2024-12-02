@@ -13,7 +13,7 @@ class Ingredient
     Ingredient(Map<String,dynamic> jsonData){
         id = jsonData["id"];
         aisle = jsonData["aisle"];
-        image = jsonData["image"];
+        image = "https://img.spoonacular.com/ingredients_250x250/${jsonData["image"]}";
         consistency = jsonData["consistency"];
         name = jsonData["name"];
         nameClean = jsonData["nameClean"];
@@ -27,4 +27,12 @@ class Ingredient
     String toString(){
         return "Ingredient name = $name, id = $id";
     }
+    @override
+    bool operator ==(Object other) =>
+        other is Ingredient &&
+        other.runtimeType == this.runtimeType &&
+        other.id == this.id;
+
+    @override
+    int get hashCode => id.hashCode;
 }

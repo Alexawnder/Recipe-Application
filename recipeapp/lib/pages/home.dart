@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'RecipeSearchList.dart'; 
+import 'Fridge.dart';
 import 'RecipeSearchList.dart';
 import '../components/NavBar.dart';
 
@@ -48,7 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: logoSize,
                   height: logoSize,
                 ),
-
                 Padding(
                   padding: EdgeInsets.only(
                       top: (orientation == Orientation.portrait)

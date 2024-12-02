@@ -1,6 +1,6 @@
 import 'dart:io' as io;
 import 'dart:convert';
-
+import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 
 import 'apikey.dart';
@@ -8,10 +8,12 @@ import 'apikey.dart';
 import 'types/recipe.dart';
 import 'types/ingredient.dart';
 
-const String _recipeCacheDir = "cache/recipes/";
 
 class RecipeAPI{
-
+    static Future<String> get _recipeCacheDir async {
+        final directory = await getApplicationCacheDirectory();
+        return "${directory.path}/recipes/";
+    }
     static Future<List<Recipe>> searchRecipesByName(String query) async{
         http.Response resp = await http.get(Uri.parse("https://api.spoonacular.com/recipes/complexSearch?apiKey=$API_KEY&query=$query"));
         print("api call!");
@@ -32,7 +34,6 @@ class RecipeAPI{
 
         return out;
     }
-
 
     static Future<List<Recipe>> searchRecipesByIngredient(List<Ingredient> ingredients) async{
         // turn ingredients List into comma-separated string
@@ -86,7 +87,7 @@ class RecipeAPI{
         return out;
     }
     static Future<Recipe?> getRecipe(int id) async{
-        io.File myFile = io.File("$_recipeCacheDir$id.json");
+        io.File myFile = io.File("${await _recipeCacheDir}$id.json");
         // check if the recipe exists in the cache already
         if(!myFile.existsSync()){
             // if not, download it
@@ -107,7 +108,7 @@ class RecipeAPI{
             return false;
         }
 
-        io.File myFile = io.File("$_recipeCacheDir$id.json");
+        io.File myFile = io.File("${await _recipeCacheDir}$id.json");
         // check if the recipe alreday in cache
         if(!myFile.existsSync()){
             // if not, create new file and write data
