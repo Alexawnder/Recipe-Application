@@ -1,31 +1,26 @@
 class Ingredient
 {
-    late int id;
-    late String aisle,
-        image,
-        consistency,
+    late String? text,
+        measure,
         name,
-        nameClean,
-        original,
-        originalName;
-    late List<dynamic> meta;
-    late Map<String,dynamic> measures;
+        foodCategory,
+        id,
+        image;
+    late double? quantity, weight;
     Ingredient(Map<String,dynamic> jsonData){
-        id = jsonData["id"];
-        aisle = jsonData["aisle"];
-        image = "https://img.spoonacular.com/ingredients_250x250/${jsonData["image"]}";
-        consistency = jsonData["consistency"];
-        name = jsonData["name"];
-        nameClean = jsonData["nameClean"];
-        original = jsonData["original"];
-        originalName = jsonData["originalName"];
-        meta = jsonData["meta"];
-        measures = jsonData["measures"];
+        text = jsonData["text"];
+        measure = jsonData["measure"];
+        name = jsonData["food"];
+        foodCategory = jsonData["foodCategory"];
+        id = jsonData["foodId"];
+        image = jsonData["image"];
+        quantity = jsonData["quantity"];
+        weight = jsonData["weight"];
     }
 
     @override
     String toString(){
-        return "Ingredient name = $name, id = $id";
+        return "Ingredient name = $text, id = $id";
     }
     @override
     bool operator ==(Object other) =>
