@@ -42,6 +42,7 @@ class Recipe
         
         ingredients = [];
         jsonData["ingredients"].forEach((ingredient) => ingredients.add(Ingredient(ingredient)));
+
     }
 
 

@@ -3,33 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'RecipeDetails.dart';
-
+import '../RecipeAPI.dart';
+import '../types/recipe.dart';
+import '../types/ingredient.dart';
 class RecipeSearchList extends StatelessWidget {
   final String query;
 
   const RecipeSearchList({super.key, required this.query});
 
-  Future<List<Map<String, dynamic>>> fetchRecipes() async {
-    const appId = '630a63de';
-    const appKey = '2ebdde9075b8b570315e2734bd35f0ce';
-    final url = Uri.parse(
-        'https://api.edamam.com/search?q=$query&app_id=$appId&app_key=$appKey');
-
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      return (data['hits'] as List)
-          .map((hit) => hit['recipe'] as Map<String, dynamic>)
-          .toList();
-    } else {
-      throw Exception('Failed to fetch recipes');
-    }
+  Future<List<Recipe>> fetchRecipes() async {
+    return RecipeAPI.searchRecipesByName(query);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Map<String, dynamic>>>(
+    return FutureBuilder<List<Recipe>>(
       future: fetchRecipes(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -48,9 +36,9 @@ class RecipeSearchList extends StatelessWidget {
             body: ListView.builder(
               itemCount: recipes.length,
               itemBuilder: (context, index) {
-                var recipe = recipes[index];
-                var label = recipe['label'];
-                var imageUrl = recipe['image'];
+                Recipe recipe = recipes[index];
+                var label = recipe.title; 
+                var imageUrl = recipe.image;
                 return Card(
                   margin: const EdgeInsets.all(8.0),
                   child: ListTile(
