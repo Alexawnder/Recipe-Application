@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'RecipeDetails.dart';
 
 class SavedRecipes extends StatelessWidget {
   final List<Map<String, dynamic>> savedRecipes;
+  final Function(Map<String, dynamic>) onSave; // callback to remove/unsave a recipe
+  const SavedRecipes({super.key, required this.savedRecipes,required this.onSave,});
 
-  const SavedRecipes({super.key, required this.savedRecipes});
+  
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +46,24 @@ class SavedRecipes extends StatelessWidget {
                         color: const Color(0xFF7EA16B),
                       ),
                     ),
-                  ),
+                    trailing: IconButton(
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
+                      onPressed: () {
+                        onSave(recipe); // triggers callback to remove the recipe
+                      },
+                    ),
+                      onTap: () {  // navigates to the recipe page of the corresp. recipe
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RecipeDetails(recipe: recipe),
+                        ),
+                      );
+                    },
+                  )
                 );
               },
             ),

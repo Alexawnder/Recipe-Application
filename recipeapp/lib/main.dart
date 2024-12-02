@@ -76,6 +76,16 @@ class _MainScreenState extends State<MainScreen> {
           ),
           SavedRecipes(
             savedRecipes: _savedRecipes,
+            onSave: (recipe) {
+              setState(() {
+                if (_savedRecipes.any((saved) => saved['label'] == recipe['label'])) {
+                  _savedRecipes.removeWhere((saved) => saved['label'] == recipe['label']);
+                } else {
+                  _savedRecipes.add(recipe);
+                }
+              });
+            },
+            
           ),
         ],
       ),
