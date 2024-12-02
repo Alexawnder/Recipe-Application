@@ -10,6 +10,13 @@ import 'types/ingredient.dart';
 
 
 class RecipeAPI{
+
+
+
+    static Future<List<Recipe>> searchRecipesByName(String query){
+        String searchRecipeURL = "'https://api.edamam.com/search?q=$query&app_id=$APP_ID&app_key=$APP_KEY'
+    }
+    /*
     static Future<String> get _recipeCacheDir async {
         final directory = await getApplicationCacheDirectory();
         return "${directory.path}/recipes/";
@@ -93,5 +100,5 @@ class RecipeAPI{
         }
         myFile.writeAsStringSync(resp.body);
         return true;
-    }
+    }*/
 }
