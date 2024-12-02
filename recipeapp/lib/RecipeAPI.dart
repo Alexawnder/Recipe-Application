@@ -1,12 +1,9 @@
-import 'dart:io' as io;
 import 'dart:convert';
-//import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 
 import 'apikey.dart';
 
 import 'types/recipe.dart';
-import 'types/ingredient.dart';
 
 
 class RecipeAPI{

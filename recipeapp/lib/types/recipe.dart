@@ -20,6 +20,7 @@ class Recipe
     late Map<String, dynamic> totalNutrients, totalDaily;
     Recipe(Map<String,dynamic> jsonData){
         // strings
+        uri = jsonData["uri"] ?? "";
         title = jsonData["label"] ?? "";
         image = jsonData["image"] ?? "";
         source = jsonData["source"] ?? "";
@@ -42,7 +43,6 @@ class Recipe
         
         ingredients = [];
         jsonData["ingredients"].forEach((ingredient) => ingredients.add(Ingredient(ingredient)));
-
     }
 
 
@@ -50,5 +50,4 @@ class Recipe
     String toString(){
         return "Recipe $title";
     }
-
 }
