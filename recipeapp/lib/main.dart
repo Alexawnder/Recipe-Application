@@ -1,16 +1,30 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:recipeapp/pages/RecipeSearchList.dart';
-import 'pages/home.dart'; 
-import 'pages/RecipeDetails.dart'; 
-import 'components/NavBar.dart'; 
+import 'pages/home.dart';
+import 'pages/RecipeDetails.dart';
+import 'package:provider/provider.dart';
+import 'providers/FridgeContentsProvider.dart';
+import 'pages/RecipeSearchList.dart';
+import 'pages/Fridge.dart';
+import 'pages/GroceryList.dart';
+import 'pages/SavedRecipes.dart';
+import 'components/NavBar.dart';
+import '../providers/GroceryListProvider.dart'; // Import the provider
 
 const appId = '630a63de';
 const appKey = '2ebdde9075b8b570315e2734bd35f0ce';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => FridgeContentsProvider()),
+        ChangeNotifierProvider(create: (_) => GroceryListProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -38,15 +52,9 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  final List<Map<String, dynamic>> _savedRecipes = []; // Shared saved recipes list
 
-  // Define the pages for each navigation item
-  final List<Widget> _pages = [
-    const MyHomePage(title: 'Recipe Finder'), // Home page
-    const RecipeSearchList(query: ''), // Placeholder for Search
-    Center(child: Text('Saved Recipes Page in Progress', style: TextStyle(fontSize: 24))), // Placeholder for Saved Recipes Page
-  ];
-
-  // Handle navigation item taps
+  // Callback for BottomNavBar
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -56,12 +64,48 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex], // Display the current page
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          MyHomePage(
+            title: 'Recipe Finder',
+            savedRecipes: _savedRecipes,
+            onItemTapped: _onItemTapped,
+          ),
+          RecipeSearchList(
+            query: '',
+            savedRecipes: _savedRecipes,
+            onSave: (recipe) {
+              setState(() {
+                if (_savedRecipes.any((saved) => saved['label'] == recipe['label'])) {
+                  _savedRecipes.removeWhere((saved) => saved['label'] == recipe['label']);
+                } else {
+                  _savedRecipes.add(recipe);
+                }
+              });
+            },
+          ),
+          Fridge(), // Fridge doesn't need `savedRecipes` or `onSave`
+          GroceryList(
+          ),
+          SavedRecipes(
+            savedRecipes: _savedRecipes,
+            onSave: (recipe) {
+              setState(() {
+                if (_savedRecipes.any((saved) => saved['label'] == recipe['label'])) {
+                  _savedRecipes.removeWhere((saved) => saved['label'] == recipe['label']);
+                } else {
+                  _savedRecipes.add(recipe);
+                }
+              });
+            },
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomNavBar(
         selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
+        onItemTapped: _onItemTapped, // Pass callback to BottomNavBar
       ),
     );
   }
 }
-

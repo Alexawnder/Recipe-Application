@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'RecipeSearchList.dart'; 
+import 'Fridge.dart';
+import 'RecipeSearchList.dart';
 import '../components/NavBar.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
   final String title;
+  final List<Map<String, dynamic>> savedRecipes; // the shared saved recipes list
+  final Function(int) onItemTapped; 
+
+  const MyHomePage({
+    super.key,
+    required this.title,
+    required this.savedRecipes,
+    required this.onItemTapped,
+  });
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -41,7 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: logoSize,
                   height: logoSize,
                 ),
-
                 Padding(
                   padding: EdgeInsets.only(
                       top: (orientation == Orientation.portrait)
@@ -57,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
 
-                Padding(
+               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 1.0),
                   child: SizedBox(
                     width: screenWidth * 0.9,
@@ -70,23 +78,37 @@ class _MyHomePageState extends State<MyHomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RecipeSearchList(query: query),
+                                builder: (context) => RecipeSearchList(
+                                  query: query, // passes the search query to the search page
+                                  savedRecipes: widget.savedRecipes, // and passes the saved recipes 
+                                  onSave: (recipe) {
+                                    setState(() {
+                                      if (widget.savedRecipes.any(
+                                          (saved) => saved['label'] == recipe['label'])) {
+                                        widget.savedRecipes.removeWhere(
+                                            (saved) => saved['label'] == recipe['label']);
+                                      } else {
+                                        widget.savedRecipes.add(recipe);
+                                      }
+                                    });
+                                  },
+                                ),
                               ),
                             );
                           }
                         },
                         decoration: const InputDecoration(
                           labelText: 'Enter a recipe name',
-                          labelStyle: TextStyle(
-                            color: Color(0xFF807471),
+                          labelStyle: const TextStyle(
+                            color: Color.fromRGBO(128, 116, 113, 1),
                           ),
-                          enabledBorder: OutlineInputBorder(
+                          enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.grey,
                               width: 2.0,
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
+                          focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Color(0xFF807471),
                               width: 2.0,
@@ -102,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
       ),
+      
     );
   }
 }
-
